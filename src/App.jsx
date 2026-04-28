@@ -1,92 +1,65 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import * as htmlToImage from 'html-to-image';
 
-// --- KOMPONEN IKON SVG (Custom agar ringan dan mandiri) ---
-const IconUser = () => <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>;
-const IconActivity = () => <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>;
-const IconScale = () => <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>;
-const IconDownload = () => <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>;
-const IconAlert = () => <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>;
-const IconMedal = () => <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15"/><path d="M11 12 5.12 2.2"/><path d="M13 12l5.88-9.8"/><path d="M8 7h8"/><circle cx="12" cy="17" r="5"/><path d="M12 18v-2h-.5"/></svg>;
-const IconReset = () => <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>;
+// --- KOMPONEN IKON SVG (Custom Aquatics) ---
+const IconUser = () => <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>;
+const IconScale = () => <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>;
+const IconDownload = () => <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>;
+const IconReset = () => <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>;
+const IconWaves = () => <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>;
+const IconAlert = () => <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>;
 
-// --- FUNGSI HELPER: TARGET EMAS (CHEAT SHEET) ---
-const getTargetPlaceholder = (id, gender) => {
-  const isM = gender === 'Putra';
-  switch(id) {
-    case 'sitReach': return isM ? 'Target: ≥ 32' : 'Target: ≥ 38';
-    case 'pushUp': return isM ? 'Target: ≥ 75' : 'Target: ≥ 50';
-    case 'sitUp': return isM ? 'Target: ≥ 110' : 'Target: ≥ 90';
-    case 'core': return 'Target: Lvl 12';
-    case 'vJump': return isM ? 'Target: ≥ 80' : 'Target: ≥ 65';
-    case 'shuttle': return isM ? 'Target: ≤ 5.60' : 'Target: ≤ 5.90';
-    case 'sprint': return isM ? 'Target: ≤ 2.75' : 'Target: ≤ 3.20';
-    case 'hopRight': return isM ? 'Target: ≥ 10.6' : 'Target: ≥ 8.3';
-    case 'hopLeft': return isM ? 'Target: ≥ 10.2' : 'Target: ≥ 7.9';
-    default: return '0';
-  }
-};
-
-// --- FUNGSI SCORING LOGIC (Berdasarkan PERMENPORA 15/2024 & Interpolasi Saintifik) ---
-const getScore = (test, gender, value) => {
+// --- FUNGSI SCORING LOGIC RENANG ---
+const getScoreRenang = (test, gender, value) => {
   if (value === '' || value === null || isNaN(value)) return 0;
-  // Parse langsung
-  const v = parseFloat(value); 
-  const isM = gender === 'Putra';
-
+  const v = parseFloat(value); const isM = gender === 'Putra';
   switch(test) {
-    // Sesuai Lampiran II: 100%, 80%, 70%, 60%
+    case 'reaction': // Inverse Logic (Lower is Faster)
+      return isM ? (v <= 0.63 ? 100 : v <= 0.66 ? 80 : v <= 0.69 ? 70 : v <= 0.72 ? 60 : 40) 
+                 : (v <= 0.67 ? 100 : v <= 0.70 ? 80 : v <= 0.74 ? 70 : v <= 0.77 ? 60 : 40);
     case 'sitReach': 
-      return isM ? (v >= 32 ? 100 : v >= 25.6 ? 80 : v >= 22.4 ? 70 : v >= 19.2 ? 60 : 40) 
-                 : (v >= 38 ? 100 : v >= 30.4 ? 80 : v >= 26.6 ? 70 : v >= 26.6 ? 60 : 40);
-    
-    case 'pushUp': 
-      return isM ? (v >= 75 ? 100 : v >= 60 ? 80 : v >= 53 ? 70 : v >= 45 ? 60 : 40) 
-                 : (v >= 50 ? 100 : v >= 40 ? 80 : v >= 35 ? 70 : v >= 35 ? 60 : 40);
-    
-    case 'sitUp': 
-      return isM ? (v >= 110 ? 100 : v >= 88 ? 80 : v >= 77 ? 70 : v >= 66 ? 60 : 40) 
-                 : (v >= 90 ? 100 : v >= 72 ? 80 : v >= 63 ? 70 : v >= 63 ? 60 : 40);
-    
+      return isM ? (v >= 30.6 ? 100 : v >= 24.5 ? 80 : v >= 21.43 ? 70 : v >= 18.37 ? 60 : 40) 
+                 : (v >= 32.1 ? 100 : v >= 25.7 ? 80 : v >= 22.48 ? 70 : v >= 19.27 ? 60 : 40);
+    case 'shoulderL': 
+      return isM ? (v >= 9.0 ? 100 : v >= 7.2 ? 80 : v >= 6.3 ? 70 : v >= 5.4 ? 60 : 40) 
+                 : (v >= 12.0 ? 100 : v >= 9.6 ? 80 : v >= 8.4 ? 70 : v >= 7.2 ? 60 : 40);
+    case 'shoulderR': 
+      return isM ? (v >= 12.0 ? 100 : v >= 9.6 ? 80 : v >= 8.4 ? 70 : v >= 7.2 ? 60 : 40) 
+                 : (v >= 14.0 ? 100 : v >= 11.2 ? 80 : v >= 9.8 ? 70 : v >= 8.4 ? 60 : 40);
+    case 'pullUp': 
+      return isM ? (v >= 33 ? 100 : v >= 26 ? 80 : v >= 23 ? 70 : v >= 20 ? 60 : 40) 
+                 : (v >= 21 ? 100 : v >= 17 ? 80 : v >= 15 ? 70 : v >= 13 ? 60 : 40);
     case 'core': 
-      return v >= 12 ? 100 : v >= 9 ? 80 : 40; // >= 9 mencakup 80, 70, 60 sesuai instruksi
-    
-    case 'vJump': 
-      return isM ? (v >= 80 ? 100 : v >= 64 ? 80 : v >= 56 ? 70 : v >= 48 ? 60 : 40) 
-                 : (v >= 65 ? 100 : v >= 52 ? 80 : v >= 46 ? 70 : v >= 46 ? 60 : 40);
-    
-    // Pro-rata Jarak (100% * persentase)
-    case 'hopRight': 
-      return isM ? (v >= 10.6 ? 100 : v >= 8.48 ? 80 : v >= 7.42 ? 70 : v >= 6.36 ? 60 : 40) 
-                 : (v >= 8.3 ? 100 : v >= 6.64 ? 80 : v >= 5.81 ? 70 : v >= 4.98 ? 60 : 40);
-    
-    case 'hopLeft': 
-      return isM ? (v >= 10.2 ? 100 : v >= 8.16 ? 80 : v >= 7.14 ? 70 : v >= 6.12 ? 60 : 40) 
-                 : (v >= 7.9 ? 100 : v >= 6.32 ? 80 : v >= 5.53 ? 70 : v >= 4.74 ? 60 : 40);
-    
-    // Pro-rata Waktu (Semakin KECIL semakin BAEK). Target / persentase.
-    case 'shuttle': 
-      return isM ? (v <= 5.60 ? 100 : v <= 7.00 ? 80 : v <= 8.00 ? 70 : v <= 9.33 ? 60 : 40) 
-                 : (v <= 5.90 ? 100 : v <= 7.37 ? 80 : v <= 8.42 ? 70 : v <= 9.83 ? 60 : 40);
-    
-    case 'sprint': 
-      return isM ? (v <= 2.75 ? 100 : v <= 3.43 ? 80 : v <= 3.92 ? 70 : v <= 4.58 ? 60 : 40) 
-                 : (v <= 3.20 ? 100 : v <= 4.00 ? 80 : v <= 4.57 ? 70 : v <= 5.33 ? 60 : 40);
-    
-    // Pro-rata VO2Max
-    case 'beep': 
-      return isM ? (v >= 65.0 ? 100 : v >= 52.0 ? 80 : v >= 45.5 ? 70 : v >= 39.0 ? 60 : 40) 
-                 : (v >= 55.0 ? 100 : v >= 44.0 ? 80 : v >= 38.5 ? 70 : v >= 33.0 ? 60 : 40);
-    
+      return v >= 12 ? 100 : v >= 10 ? 80 : v >= 8 ? 70 : v >= 7 ? 60 : 40;
+    case 'broadJump': 
+      return isM ? (v >= 2.63 ? 100 : v >= 2.10 ? 80 : v >= 1.84 ? 70 : v >= 1.58 ? 60 : 40) 
+                 : (v >= 2.39 ? 100 : v >= 1.91 ? 80 : v >= 1.67 ? 70 : v >= 1.43 ? 60 : 40);
+    case 'swimVO2': 
+      return isM ? (v >= 55.9 ? 100 : v >= 44.7 ? 80 : v >= 41.9 ? 70 : v >= 39.1 ? 60 : 40) 
+                 : (v >= 41.9 ? 100 : v >= 33.5 ? 80 : v >= 31.4 ? 70 : v >= 29.3 ? 60 : 40);
     default: return 0;
   }
 };
 
-// --- KOMPONEN RADAR CHART (Custom SVG) ---
-// FIX: Tambahkan properti isBlanko ke dalam parameter
-const RadarChart = ({ data, isBlanko }) => {
-  const size = 320; const center = size / 2; const radius = 110;
-  const labels = ['Sit/Reach', 'PushUp', 'SitUp', 'Core', 'V-Jump', '3-Hop(R)', '3-Hop(L)', 'Shuttle', 'Sprint', 'VO2Max'];
+// --- FUNGSI TARGET PLACEHOLDER ---
+const getTargetPlaceholder = (test, gender) => {
+  const isM = gender === 'Putra';
+  switch(test) {
+    case 'reaction': return isM ? '≤ 0.63' : '≤ 0.67';
+    case 'sitReach': return isM ? '≥ 30.6' : '≥ 32.1';
+    case 'shoulderL': return isM ? '≥ 9.0' : '≥ 12.0';
+    case 'shoulderR': return isM ? '≥ 12.0' : '≥ 14.0';
+    case 'pullUp': return isM ? '≥ 33' : '≥ 21';
+    case 'core': return '≥ 12';
+    case 'broadJump': return isM ? '≥ 2.63' : '≥ 2.39';
+    case 'swimVO2': return isM ? '≥ 55.9' : '≥ 41.9';
+    default: return '';
+  }
+};
+
+// --- KOMPONEN RADAR CHART ---
+const RadarChart = ({ data, labels, isBlanko }) => {
+  const size = 320; const center = size / 2; const radius = 100;
   const angleStep = (Math.PI * 2) / labels.length;
 
   const getCoordinates = (val, i) => {
@@ -103,25 +76,24 @@ const RadarChart = ({ data, isBlanko }) => {
       {[20, 40, 60, 80, 100].map(level => {
         const pts = labels.map((_, i) => getCoordinates(level, i));
         const path = pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ') + ' Z';
-        return <path key={level} d={path} fill="none" stroke={level === 100 ? '#facc15' : '#e5e7eb'} strokeWidth={level === 100 ? 2 : 1} strokeDasharray={level < 100 ? "4 4" : "none"} />
+        return <path key={level} d={path} fill="none" stroke={level === 100 ? '#06b6d4' : '#e2e8f0'} strokeWidth={level === 100 ? 2 : 1} strokeDasharray={level < 100 ? "4 4" : "none"} />
       })}
       
       {labels.map((label, i) => {
-        const pOuter = getCoordinates(115, i);
+        const pOuter = getCoordinates(125, i);
         const pEdge = getCoordinates(100, i);
         return (
           <g key={i}>
-            <line x1={center} y1={center} x2={pEdge.x} y2={pEdge.y} stroke="#e5e7eb" strokeWidth="1" />
-            <text x={pOuter.x} y={pOuter.y} textAnchor="middle" dominantBaseline="middle" className="text-[10px] font-bold fill-gray-500">{label}</text>
+            <line x1={center} y1={center} x2={pEdge.x} y2={pEdge.y} stroke="#e2e8f0" strokeWidth="1" />
+            <text x={pOuter.x} y={pOuter.y} textAnchor="middle" dominantBaseline="middle" className="text-[10px] font-black fill-slate-500 uppercase">{label}</text>
           </g>
         );
       })}
 
-      {/* FIX: Sembunyikan area kuning dan titik hitam jika ini adalah mode blanko kosong */}
       {!isBlanko && (
         <>
-          <path d={dataPath} fill="rgba(250, 204, 21, 0.4)" stroke="#111827" strokeWidth="3" strokeLinejoin="round" />
-          {dataPoints.map((p, i) => ( <circle key={i} cx={p.x} cy={p.y} r="4" fill="#111827" /> ))}
+          <path d={dataPath} fill="rgba(6, 182, 212, 0.3)" stroke="#06b6d4" strokeWidth="3" strokeLinejoin="round" />
+          {dataPoints.map((p, i) => ( <circle key={i} cx={p.x} cy={p.y} r="4" fill="#0891b2" /> ))}
         </>
       )}
     </svg>
@@ -132,9 +104,8 @@ export default function App() {
   const [identity, setIdentity] = useState({ name: '', origin: '', dob: '', gender: 'Putra' });
   const [anthro, setAnthro] = useState({ weight: '', height: '', armSpan: '', sitHeight: '' });
   const [tests, setTests] = useState({
-    sitReach: '', pushUp: '', sitUp: '', core: '', vJump: '', hopRight: '', hopLeft: '', shuttle: '', sprint: '', beepLevel: '', beepShuttle: ''
+    reaction: '', sitReach: '', shoulderL: '', shoulderR: '', pullUp: '', core: '', broadJump: '', swimVO2: ''
   });
-  
   const [isExporting, setIsExporting] = useState(false);
 
   const age = useMemo(() => {
@@ -143,428 +114,322 @@ export default function App() {
     const today = new Date();
     let calculatedAge = today.getFullYear() - birthDate.getFullYear();
     const m = today.getMonth() - birthDate.getMonth();
-    
-    // Kurangi umur 1 tahun jika bulan/tanggal hari ini belum melewati hari ulang tahun
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      calculatedAge--;
-    }
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) calculatedAge--;
     return calculatedAge;
   }, [identity.dob]);
 
   const bmiData = useMemo(() => {
-    // FIX: Ubah nilai default BMI dari 0 menjadi '-' agar terlihat elegan saat form kosong
-    if (!anthro.weight || !anthro.height || anthro.height <= 0) return { bmi: '-', status: '-', color: 'text-gray-400' };
-  
-  const hM = anthro.height / 100;
-  const bmiValue = (anthro.weight / (hM * hM));
-  const bmi = bmiValue.toFixed(1);
-    let status = 'Kurus'; let color = 'text-blue-500';
-    if (bmi >= 18.5 && bmi <= 24.9) { status = 'Ideal'; color = 'text-green-500'; }
-    else if (bmi >= 25 && bmi <= 29.9) { status = 'Gemuk'; color = 'text-amber-500'; }
-    else if (bmi >= 30) { status = 'Obesitas'; color = 'text-red-500'; }
+    if (!anthro.weight || !anthro.height || anthro.height <= 0) return { bmi: '-', status: '-', color: 'text-slate-400' };
+    const hM = anthro.height / 100;
+    const bmiValue = (anthro.weight / (hM * hM));
+    const bmi = bmiValue.toFixed(1);
+    let status = 'Kurus'; let color = 'text-sky-500';
+    if (bmi >= 18.5 && bmi <= 24.9) { status = 'Ideal'; color = 'text-cyan-500'; }
+    else if (bmi >= 25 && bmi <= 29.9) { status = 'Gemuk'; color = 'text-blue-500'; }
+    else if (bmi >= 30) { status = 'Obesitas'; color = 'text-indigo-600'; }
     return { bmi, status, color };
   }, [anthro.weight, anthro.height]);
 
+  // --- MESIN PENGHITUNG APE INDEX & RASIO TUNGKAI ---
   const proportionData = useMemo(() => {
     const h = parseFloat(anthro.height);
     const arm = parseFloat(anthro.armSpan);
     const sit = parseFloat(anthro.sitHeight);
 
-    let apeIndex = { value: 0, text: '-', color: 'text-gray-400', desc: 'Isi Tinggi & Lengan' };
-    let legRatio = { value: 0, text: '-', color: 'text-gray-400', desc: 'Isi Tinggi Duduk' };
+    let apeIndex = { value: 0, text: '-', color: 'text-slate-400', desc: 'Isi Tinggi & Lengan' };
+    let legRatio = { value: 0, text: '-', color: 'text-slate-400', desc: 'Isi Tinggi Duduk' };
 
     if (h > 0 && arm > 0) {
       const ratio = arm / h;
-      if (ratio > 1.02) apeIndex = { value: ratio.toFixed(2), text: 'Superior', color: 'text-green-600', desc: 'Reach Advantage +++' };
-      else if (ratio >= 1.0) apeIndex = { value: ratio.toFixed(2), text: 'Ideal', color: 'text-blue-600', desc: 'Reach Advantage +' };
-      else apeIndex = { value: ratio.toFixed(2), text: 'Standar', color: 'text-amber-600', desc: 'Jangkauan Normal' };
+      if (ratio > 1.02) apeIndex = { value: ratio.toFixed(2), text: 'Superior', color: 'text-cyan-500', desc: 'Keuntungan Tarikan Air (Pull)' };
+      else if (ratio >= 1.0) apeIndex = { value: ratio.toFixed(2), text: 'Ideal', color: 'text-sky-500', desc: 'Proporsi Hidrodinamis Normal' };
+      else apeIndex = { value: ratio.toFixed(2), text: 'Standar', color: 'text-slate-500', desc: 'Jangkauan Stroke Pendek' };
     }
 
     if (h > 0 && sit > 0 && sit < h) {
       const legLength = h - sit;
       const legPercentage = (legLength / h) * 100;
-      if (legPercentage >= 50) legRatio = { value: legPercentage.toFixed(1) + '%', text: 'Tungkai Panjang', color: 'text-green-600', desc: 'Senjata Tendangan Jauh' };
-      else if (legPercentage >= 47) legRatio = { value: legPercentage.toFixed(1) + '%', text: 'Tungkai Ideal', color: 'text-blue-600', desc: 'Proporsi Seimbang' };
-      else legRatio = { value: legPercentage.toFixed(1) + '%', text: 'Tungkai Pendek', color: 'text-amber-600', desc: 'Fokus Power Jarak Dekat' };
+      if (legPercentage >= 50) legRatio = { value: legPercentage.toFixed(1) + '%', text: 'Tungkai Panjang', color: 'text-cyan-500', desc: 'Tolakan Dinding (Flip Turn) Kuat' };
+      else if (legPercentage >= 47) legRatio = { value: legPercentage.toFixed(1) + '%', text: 'Tungkai Ideal', color: 'text-sky-500', desc: 'Proporsi Tendangan Seimbang' };
+      else legRatio = { value: legPercentage.toFixed(1) + '%', text: 'Tungkai Pendek', color: 'text-slate-500', desc: 'Fokus Frekuensi Tendangan' };
     }
 
     return { apeIndex, legRatio };
   }, [anthro.height, anthro.armSpan, anthro.sitHeight]);
 
-  const calculatedVO2Max = useMemo(() => {
-    const l = parseInt(tests.beepLevel);
-    const s = parseInt(tests.beepShuttle);
-    if (!l || !s || l < 1 || s < 1) return '';
-    const vo2max = 3.46 * (l + s / (l * 0.4325 + 7.0048)) + 12.2;
-    return parseFloat(vo2max.toFixed(1));
-  }, [tests.beepLevel, tests.beepShuttle]);
+  // Deteksi Simetri Khusus Renang (Shoulder Mobility)
+  const symmetryData = useMemo(() => {
+    const r = parseFloat(tests.shoulderR);
+    const l = parseFloat(tests.shoulderL);
+    if (!r || !l || r === 0 || l === 0) return { diff: 0, isDanger: false };
+    const min = Math.min(r, l);
+    const max = Math.max(r, l);
+    const diff = 100 - ((min / max) * 100);
+    return { diff: diff.toFixed(1), isDanger: diff > 15, weakSide: r < l ? 'Kanan' : 'Kiri' };
+  }, [tests.shoulderR, tests.shoulderL]);
 
   const scores = useMemo(() => ({
-    sitReach: getScore('sitReach', identity.gender, tests.sitReach),
-    pushUp: getScore('pushUp', identity.gender, tests.pushUp),
-    sitUp: getScore('sitUp', identity.gender, tests.sitUp),
-    core: getScore('core', identity.gender, tests.core),
-    vJump: getScore('vJump', identity.gender, tests.vJump),
-    hopRight: getScore('hopRight', identity.gender, tests.hopRight),
-    hopLeft: getScore('hopLeft', identity.gender, tests.hopLeft),
-    shuttle: getScore('shuttle', identity.gender, tests.shuttle),
-    sprint: getScore('sprint', identity.gender, tests.sprint),
-    beep: getScore('beep', identity.gender, calculatedVO2Max),
-  }), [tests, identity.gender, calculatedVO2Max]);
+    reaction: getScoreRenang('reaction', identity.gender, tests.reaction),
+    sitReach: getScoreRenang('sitReach', identity.gender, tests.sitReach),
+    shoulderL: getScoreRenang('shoulderL', identity.gender, tests.shoulderL),
+    shoulderR: getScoreRenang('shoulderR', identity.gender, tests.shoulderR),
+    pullUp: getScoreRenang('pullUp', identity.gender, tests.pullUp),
+    core: getScoreRenang('core', identity.gender, tests.core),
+    broadJump: getScoreRenang('broadJump', identity.gender, tests.broadJump),
+    swimVO2: getScoreRenang('swimVO2', identity.gender, tests.swimVO2),
+  }), [tests, identity.gender]);
 
+  const activeLabels = ['Start Rx', 'Flexibility', 'Shoulder (L)', 'Shoulder (R)', 'Pull Up', 'Core', 'Broad Jump', 'Swim VO2'];
+  
   const averageScore = useMemo(() => {
     const vals = Object.values(scores);
     return Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
   }, [scores]);
 
-  // Tambahan: Deteksi apakah form ini dicetak sebagai blanko kosong
   const isBlanko = !identity.name && averageScore === 0;
 
-  const lsiData = useMemo(() => {
-    const r = parseFloat(tests.hopRight);
-    const l = parseFloat(tests.hopLeft);
-    if (!r || !l || r === 0 || l === 0) return { lsi: 100, isDanger: false };
-    const min = Math.min(r, l);
-    const max = Math.max(r, l);
-    const lsi = (min / max) * 100;
-    return { lsi: lsi.toFixed(1), isDanger: lsi < 85, weakSide: r < l ? 'Kanan' : 'Kiri' };
-  }, [tests.hopRight, tests.hopLeft]);
+  const handleReset = () => { if (window.confirm("Hapus semua data isian?")) window.location.reload(); };
 
-  // --- FUNGSI RESET DATA ---
-  const handleReset = () => {
-    if (window.confirm("Apakah Anda yakin ingin menghapus semua data isian?")) {
-      window.location.reload(); // Cara paling bersih untuk mereset seluruh form
-    }
+  const handleDownloadImage = async () => {
+    setIsExporting(true);
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    try {
+      const element = document.getElementById('report-container');
+      const dataUrl = await htmlToImage.toPng(element, { quality: 1.0, backgroundColor: "#f8fafc", pixelRatio: 2 });
+      const safeName = identity?.name ? identity.name.replace(/[^a-z0-9]/gi, '_').toLowerCase() : 'atlet';
+      const link = document.createElement("a");
+      link.download = `Rapor_Aquatics_${safeName}.png`;
+      link.href = dataUrl; link.click();
+    } catch (error) { console.error(error); alert("Gagal membuat gambar."); } finally { setIsExporting(false); }
   };
 
-// --- FUNGSI EXPORT (MENGGUNAKAN HTML-TO-IMAGE MODERN) ---
-const handleDownloadImage = async () => {
-  setIsExporting(true);
-  
-  // Tunggu DOM me-render kelas CSS `export-mode`
-  await new Promise((resolve) => setTimeout(resolve, 300));
-  
-  try {
-    const element = document.getElementById('report-container');
-    if (!element) throw new Error("ID report-container tidak ditemukan");
-    
-    // Menggunakan htmlToImage (support Tailwind v4 oklch)
-    const dataUrl = await htmlToImage.toPng(element, { 
-      quality: 1.0,
-      backgroundColor: "#f3f4f6",
-      pixelRatio: 2 // Membuat gambar menjadi resolusi tinggi (HD)
-    });
-    
-    const safeName = identity?.name ? identity.name.replace(/[^a-z0-9]/gi, '_').toLowerCase() : 'atlet';
-    const link = document.createElement("a");
-    link.download = `Rapor_Fisik_Taekwondo_${safeName}.png`;
-    link.href = dataUrl;
-    link.click();
-  } catch (error) {
-    console.error("Gagal export:", error);
-    alert("Gagal membuat gambar rapor. Silakan coba lagi.");
-  } finally {
-    setIsExporting(false);
-  }
-};
+  const inputClass = "w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:border-cyan-500 transition-all";
+  const testInputClass = "w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 font-black text-slate-900 focus:outline-none focus:border-cyan-500 transition-all pr-24 placeholder:text-[11px] placeholder:font-bold placeholder:text-slate-400/70 text-right";
 
   return (
-    <div id="report-container" className="min-h-screen bg-gray-100 flex flex-col items-center py-10 px-4 font-sans print:bg-white print:py-0 print:px-0">
+    <div id="report-container" className="min-h-screen bg-slate-50 flex flex-col items-center py-10 px-4 font-sans print:bg-white print:py-0 print:px-0">
       
       {isExporting && (
         <style dangerouslySetInnerHTML={{__html: `
-          /* FIX: Mengembalikan warna abu-abu khas kotak Bento agar form terlihat memiliki batas ruang tulis jika diprint kosong */
-          /* Kita hanya menyembunyikan elemen bawaan web (panah dropdown, spinner) dan memperbaiki padding */
-          #report-container input, 
-          #report-container select {
-            appearance: none !important;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            padding-bottom: 8px !important; /* Mencegah huruf ekor bawah terpotong */
-          }
-          
-          /* Sembunyikan spinner pada input angka di Chrome/Safari */
-          #report-container input[type="number"]::-webkit-inner-spin-button, 
-          #report-container input[type="number"]::-webkit-outer-spin-button { 
-            -webkit-appearance: none !important; 
-            margin: 0 !important; 
-          }
-
-          /* Hilangkan efek biru fokus (glow) jika kursor tertinggal di dalam input saat mengeklik tombol unduh */
-          #report-container input:focus,
-          #report-container select:focus {
-            box-shadow: none !important;
-            border-color: #e5e7eb !important;
-          }
+          #report-container input, #report-container select { appearance: none !important; -webkit-appearance: none; padding-bottom: 8px !important; }
+          #report-container input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none !important; margin: 0 !important; }
+          #report-container input:focus, #report-container select:focus { box-shadow: none !important; border-color: #e2e8f0 !important; }
         `}} />
       )}
 
-      {/* HEADER */}
-      <header className="bg-black text-white p-6 md:p-8 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-400 rounded-full blur-3xl opacity-20 -mr-20 -mt-20" data-html2canvas-ignore="true"></div>
-        <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+      {/* HEADER: AQUATIC DYNAMICS THEME */}
+      <header className="bg-slate-900 text-white p-8 shadow-2xl relative overflow-hidden w-full max-w-7xl rounded-[2.5rem] border-b-8 border-cyan-500">
+        <div className="absolute top-0 left-0 w-full h-full opacity-20">
+           <div className="absolute top-[-50%] right-[-10%] w-[60%] h-[150%] bg-cyan-400/30 blur-[100px] rounded-full"></div>
+           <div className="absolute bottom-[-50%] left-[-10%] w-[60%] h-[150%] bg-blue-600/30 blur-[100px] rounded-full"></div>
+        </div>
+        
+        <div className="mx-auto relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div>
-            <div className="inline-block bg-yellow-400 text-black font-black text-[10px] px-3 py-1 rounded-full uppercase tracking-widest mb-3 shadow-md">
-              PERMENPORA 15 TAHUN 2024
+            <div className="inline-block bg-cyan-500 text-slate-900 font-black text-[10px] px-4 py-1.5 rounded-full uppercase tracking-[0.2em] mb-4 shadow-lg border border-cyan-400">
+              PERMENPORA 15 / 2024 • ELITE STANDARD
             </div>
-            <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
-              KALKULATOR FISIK<br/><span className="text-yellow-400">TAEKWONDO</span>
+            <h1 className="text-4xl md:text-6xl font-black tracking-tighter leading-tight italic">
+              AQUATIC <span className="text-cyan-400">PERFORMANCE</span>
             </h1>
           </div>
-          <div className="text-right">
-     {/* FIX: Sembunyikan tombol saat proses export */}
-     {!isExporting && (
-            <div className="no-print flex items-center justify-end gap-2 mb-4">
-              <button onClick={handleReset} className="bg-white/10 hover:bg-red-500/90 text-white px-4 py-2 rounded-xl transition-all duration-300 flex items-center gap-2 text-sm font-bold tracking-wide backdrop-blur-sm border border-white/10 hover:border-red-500/50 shadow-lg">
-                <IconReset /> <span className="hidden md:inline">Reset Data</span>
-              </button>
-              <button onClick={handleDownloadImage} disabled={isExporting} className="bg-tkd-yellow hover:bg-yellow-400 text-tkd-black px-6 py-2 rounded-xl transition-all duration-300 flex items-center gap-2 text-sm font-black tracking-wide border border-yellow-300 shadow-[0_0_15px_rgba(250,204,21,0.3)] hover:shadow-[0_0_25px_rgba(250,204,21,0.5)] disabled:opacity-70 disabled:cursor-not-allowed">
-                <IconDownload /> {isExporting ? 'Memproses...' : 'Unduh Rapor (PNG)'}
-              </button>
+          <div className="text-left md:text-right w-full md:w-auto">
+            {!isExporting && (
+              <div className="no-print flex flex-wrap items-center justify-start md:justify-end gap-3 mb-4">
+                <button onClick={handleReset} className="bg-white/5 hover:bg-white/10 text-white px-5 py-2.5 rounded-xl transition-all duration-300 flex items-center gap-2 text-xs font-bold tracking-wider backdrop-blur-sm border border-white/10">
+                  <IconReset /> <span>Reset</span>
+                </button>
+                <button onClick={handleDownloadImage} disabled={isExporting} className="bg-cyan-500 hover:bg-cyan-400 text-slate-900 px-6 py-2.5 rounded-xl transition-all duration-300 flex items-center gap-2 text-xs font-black tracking-wider shadow-[0_0_20px_rgba(6,182,212,0.4)] disabled:opacity-50">
+                  <IconDownload /> {isExporting ? 'Processing...' : 'Export PNG'}
+                </button>
+              </div>
+            )}
+            <div className="mt-2">
+                <p className="font-black text-cyan-500/80 text-[11px] tracking-[0.3em] uppercase">
+                  System Developed <span className="text-white">by fiqhipondaa9</span>
+                </p>
             </div>
-          )}
-            <p className="font-bold text-gray-400 text-xs tracking-widest uppercase">Platform Olahraga<br/>by <span className="text-white">fiqhipondaa9</span></p>
           </div>
         </div>
       </header>
 
-      {/* Pembungkus utama menggunakan width dinamis agar simetris saat diekspor */}
-      <main className={`${isExporting ? 'w-[1100px]' : 'max-w-7xl'} mx-auto px-4 md:px-8 mt-8 grid grid-cols-1 lg:grid-cols-12 gap-6`}>
+      <main className={`${isExporting ? 'w-[1200px]' : 'max-w-7xl w-full'} mx-auto mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8`}>
         
-        {/* ================= KOLOM KIRI (Input Data) ================= */}
-        <div className="lg:col-span-7 flex flex-col gap-6">
-          
-          <div className="bg-white rounded-[2rem] p-6 md:p-8 shadow-sm border border-gray-200">
-            <div className="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
-              <div className="bg-black text-yellow-400 p-2.5 rounded-2xl"><IconUser /></div>
-              <h2 className="text-xl font-black text-gray-900 uppercase tracking-wide">Identitas & Antropometri</h2>
+        {/* LEFT COLUMN: DATA INPUT */}
+        <div className="lg:col-span-7 flex flex-col gap-8">
+          <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-200 relative overflow-hidden">
+            <div className="flex items-center gap-4 mb-8 border-b border-slate-100 pb-5 relative z-10">
+              <div className="bg-cyan-500 text-white p-3 rounded-2xl shadow-lg shadow-cyan-200"><IconUser /></div>
+              <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight italic">Biographical Profile</h2>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-500 uppercase ml-1">Nama Atlet</label>
-                <input type="text" value={identity.name} onChange={e => setIdentity({...identity, name: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 font-bold text-gray-900 focus:outline-none focus:border-yellow-400 transition-all" placeholder={isExporting ? "" : "Masukkan nama..."} />
-              </div>
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-500 uppercase ml-1">Klub / Provinsi</label>
-                <input type="text" value={identity.origin} onChange={e => setIdentity({...identity, origin: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 font-bold text-gray-900 focus:outline-none focus:border-yellow-400 transition-all" placeholder={isExporting ? "" : "Asal daerah..."} />
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 relative z-10">
+              <div className="space-y-1"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nama Lengkap</label><input type="text" value={identity.name} onChange={e => setIdentity({...identity, name: e.target.value})} className={inputClass} placeholder={isExporting ? "" : "Nama atlet..."} /></div>
+              <div className="space-y-1"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Provinsi / Klub</label><input type="text" value={identity.origin} onChange={e => setIdentity({...identity, origin: e.target.value})} className={inputClass} placeholder={isExporting ? "" : "Asal instansi..."} /></div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-500 uppercase ml-1">Tgl Lahir</label>
-                  <input type="date" value={identity.dob} onChange={e => setIdentity({...identity, dob: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 font-bold text-gray-900 focus:outline-none focus:border-yellow-400 transition-all text-sm" />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-500 uppercase ml-1">Umur</label>
-                  {/* FIX: Menggunakan invisible text (\u00A0) agar tinggi kotak stabil mutlak saat kosong */}
-                  <div className="w-full bg-gray-100 border border-gray-200 rounded-2xl px-4 py-3 font-black text-gray-900 text-center">{age !== '-' ? `${age} Thn` : '\u00A0'}</div>
-                </div>
+                <div className="space-y-1"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Tgl Lahir</label><input type="date" value={identity.dob} onChange={e => setIdentity({...identity, dob: e.target.value})} className={`${inputClass} text-sm`} /></div>
+                <div className="space-y-1"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Age Index</label><div className="w-full bg-slate-100 border border-slate-200 rounded-2xl px-4 py-3 font-black text-slate-900 text-center">{age !== '-' ? `${age} Thn` : '\u00A0'}</div></div>
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-500 uppercase ml-1">Jenis Kelamin</label>
-                <select value={identity.gender} onChange={e => setIdentity({...identity, gender: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 font-bold text-gray-900 focus:outline-none focus:border-yellow-400 transition-all cursor-pointer">
-                  <option value="Putra">Putra (Laki-laki)</option>
-                  <option value="Putri">Putri (Perempuan)</option>
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Kategori Gender</label>
+                <select value={identity.gender} onChange={e => setIdentity({...identity, gender: e.target.value})} className={`${inputClass} cursor-pointer`}>
+                  <option value="Putra">Putra (Male)</option><option value="Putri">Putri (Female)</option>
                 </select>
               </div>
             </div>
 
-            {/* FIX: Menghapus kelas export-transparent */}
-            <div className="bg-gray-50 rounded-3xl p-5 border border-gray-100 grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-gray-400 uppercase">Tinggi (cm)</label>
-                <input type="number" value={anthro.height} onChange={e => setAnthro({...anthro, height: e.target.value})} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 font-bold text-center focus:border-yellow-400 outline-none" placeholder={isExporting ? "" : "0"} />
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-gray-400 uppercase">Berat (kg)</label>
-                <input type="number" value={anthro.weight} onChange={e => setAnthro({...anthro, weight: e.target.value})} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 font-bold text-center focus:border-yellow-400 outline-none" placeholder={isExporting ? "" : "0"} />
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-gray-400 uppercase">Rentang Lengan</label>
-                <input type="number" value={anthro.armSpan} onChange={e => setAnthro({...anthro, armSpan: e.target.value})} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 font-bold text-center focus:border-yellow-400 outline-none" placeholder={isExporting ? "" : "cm"} />
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-gray-400 uppercase">Tinggi Duduk</label>
-                <input type="number" value={anthro.sitHeight} onChange={e => setAnthro({...anthro, sitHeight: e.target.value})} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 font-bold text-center focus:border-yellow-400 outline-none" placeholder={isExporting ? "" : "cm"} />
-              </div>
+            <div className="bg-slate-50 rounded-[2rem] p-6 border border-slate-200 grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10">
+              {[{label: 'Tinggi (cm)', id: 'height'}, {label: 'Berat (kg)', id: 'weight'}, {label: 'Rentang Lengan', id: 'armSpan'}, {label: 'Tinggi Duduk', id: 'sitHeight'}].map(item => (
+                 <div key={item.id} className="space-y-1">
+                   <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{item.label}</label>
+                   <input type="number" value={anthro[item.id]} onChange={e => setAnthro({...anthro, [item.id]: e.target.value})} className="w-full bg-white border border-slate-200 rounded-2xl py-3 px-3 font-black text-center focus:border-cyan-500 outline-none" placeholder={isExporting ? "" : "0"} />
+                 </div>
+              ))}
             </div>
             
-            <div className="mt-4 flex items-center justify-between bg-black text-white rounded-2xl p-4 shadow-md animate-in fade-in">
-               <div className="flex items-center gap-3"><IconScale /> <span className="font-bold text-sm tracking-widest uppercase text-gray-300">Indeks Massa Tubuh</span></div>
-               <div className="flex items-center gap-3">
-                 <span className="text-2xl font-black">{bmiData.bmi}</span>
-                 {/* FIX: Sembunyikan pil putih jika IMT masih kosong (-) */}
-                 {bmiData.status !== '-' && (
-                   <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest bg-white ${bmiData.color}`}>{bmiData.status}</span>
-                 )}
+            <div className="mt-4 flex items-center justify-between bg-slate-900 text-white rounded-[2rem] p-6 shadow-xl border-l-8 border-cyan-500 relative z-10">
+               <div className="flex items-center gap-4"><IconScale /> <span className="font-black text-xs tracking-[0.2em] uppercase text-slate-400">Body Mass Index</span></div>
+               <div className="flex items-center gap-5">
+                 <span className="text-4xl font-black italic">{bmiData.bmi}</span>
+                 {bmiData.status !== '-' && <span className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-slate-800 shadow-inner ${bmiData.color}`}>{bmiData.status}</span>}
                </div>
             </div>
 
+            {/* KOTAK RASIO TUNGKAI & LENGAN (AQUATICS) */}
             {(anthro.height > 0 && (anthro.armSpan > 0 || anthro.sitHeight > 0)) && (
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in slide-in-from-bottom-2">
-                <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex flex-col justify-center relative overflow-hidden">
-                   <div className="absolute top-0 left-0 w-1 h-full bg-yellow-400"></div>
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10 animate-in fade-in">
+                <div className="bg-white border border-slate-200 rounded-[2rem] p-5 shadow-sm flex flex-col justify-center relative overflow-hidden">
+                   <div className="absolute top-0 left-0 w-1.5 h-full bg-cyan-500"></div>
                    <div className="flex justify-between items-start mb-2 pl-2">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Ape Index (Lengan)</span>
-                      <span className={`text-[10px] bg-gray-50 px-2 py-0.5 rounded-md font-black uppercase tracking-widest ${proportionData.apeIndex.color}`}>{proportionData.apeIndex.text}</span>
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Ape Index</span>
+                      <span className={`text-[9px] bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg font-black uppercase tracking-widest ${proportionData.apeIndex.color}`}>{proportionData.apeIndex.text}</span>
                    </div>
                    <div className="flex items-end gap-2 pl-2 mt-1">
-                      <span className="text-3xl font-black text-gray-900 leading-none">{proportionData.apeIndex.value}</span>
+                      <span className="text-3xl font-black text-slate-900 leading-none italic">{proportionData.apeIndex.value}</span>
                    </div>
-                   <p className="text-xs font-bold text-gray-500 mt-2 pl-2">{proportionData.apeIndex.desc}</p>
+                   <p className="text-[10px] font-bold text-slate-400 mt-2 pl-2 uppercase tracking-widest">{proportionData.apeIndex.desc}</p>
                 </div>
                 
-                <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex flex-col justify-center relative overflow-hidden">
-                   <div className="absolute top-0 left-0 w-1 h-full bg-black"></div>
+                <div className="bg-white border border-slate-200 rounded-[2rem] p-5 shadow-sm flex flex-col justify-center relative overflow-hidden">
+                   <div className="absolute top-0 left-0 w-1.5 h-full bg-blue-600"></div>
                    <div className="flex justify-between items-start mb-2 pl-2">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Rasio Tungkai</span>
-                      <span className={`text-[10px] bg-gray-50 px-2 py-0.5 rounded-md font-black uppercase tracking-widest ${proportionData.legRatio.color}`}>{proportionData.legRatio.text}</span>
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Rasio Tungkai</span>
+                      <span className={`text-[9px] bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg font-black uppercase tracking-widest ${proportionData.legRatio.color}`}>{proportionData.legRatio.text}</span>
                    </div>
                    <div className="flex items-end gap-2 pl-2 mt-1">
-                      <span className="text-3xl font-black text-gray-900 leading-none">{proportionData.legRatio.value}</span>
+                      <span className="text-3xl font-black text-slate-900 leading-none italic">{proportionData.legRatio.value}</span>
                    </div>
-                   <p className="text-xs font-bold text-gray-500 mt-2 pl-2">{proportionData.legRatio.desc}</p>
+                   <p className="text-[10px] font-bold text-slate-400 mt-2 pl-2 uppercase tracking-widest">{proportionData.legRatio.desc}</p>
                 </div>
               </div>
             )}
           </div>
 
-          <div className="bg-white rounded-[2rem] p-6 md:p-8 shadow-sm border border-gray-200">
-            <div className="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
-              <div className="bg-yellow-400 text-black p-2.5 rounded-2xl"><IconActivity /></div>
-              <h2 className="text-xl font-black text-gray-900 uppercase tracking-wide">Rekam Hasil Tes Fisik</h2>
+          <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-200">
+            <div className="flex items-center gap-4 mb-8 border-b border-slate-100 pb-5">
+              <div className="bg-cyan-100 text-cyan-600 p-3 rounded-2xl"><IconWaves /></div>
+              <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight italic">Aquatic Kinetics</h2>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6">
                {[
-                 { id: 'sitReach', label: 'Sit & Reach', unit: 'cm' },
-                 { id: 'pushUp', label: 'Push Up (1 Min)', unit: 'reps' },
-                 { id: 'sitUp', label: 'Sit Up (2 Min)', unit: 'reps' },
-                 { id: 'core', label: 'Core Stability', unit: 'level' },
-                 { id: 'vJump', label: 'Vertical Jump', unit: 'cm' },
-                 { id: 'shuttle', label: 'Shuttle Run 4x5', unit: 'detik' },
-                 { id: 'sprint', label: 'Sprint 20m', unit: 'detik' },
+                 { id: 'reaction', label: 'Start Reaction Time', unit: 'DETIK' },
+                 { id: 'sitReach', label: 'Sit & Reach Flexibility', unit: 'CM' },
+                 { id: 'shoulderL', label: 'Shoulder Mobility (Kiri)', unit: 'CM' },
+                 { id: 'shoulderR', label: 'Shoulder Mobility (Kanan)', unit: 'CM' },
+                 { id: 'pullUp', label: 'Pull Up (1 Menit)', unit: 'REPS' },
+                 { id: 'core', label: 'Core Stability', unit: 'LEVEL' },
+                 { id: 'broadJump', label: 'Standing Broad Jump', unit: 'METER' },
+                 { id: 'swimVO2', label: 'Aerobic Swim VO2 Max (15m)', unit: 'ML/KG' },
                ].map(item => (
-                 <div key={item.id} className="flex flex-col">
-                   <label className="text-xs font-bold text-gray-500 uppercase ml-1 mb-1">{item.label}</label>
-                   <div className="relative">
-                     {/* Perhatikan placeholder tetap hidup khusus bagian input target sport science */}
-                     <input type="number" step="0.1" value={tests[item.id]} onChange={e => setTests({...tests, [item.id]: e.target.value})} className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 font-black text-gray-900 focus:outline-none focus:border-yellow-400 transition-all pr-14 placeholder:text-[11px] placeholder:font-bold placeholder:text-gray-400/80" placeholder={getTargetPlaceholder(item.id, identity.gender)} />
-                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">{item.unit}</span>
-                   </div>
+                 <div key={item.id} className={`${item.id === 'swimVO2' ? 'sm:col-span-2 bg-cyan-50/50 p-6 rounded-[2rem] border border-cyan-100 mt-2 shadow-inner' : 'flex flex-col'}`}>
+                   {item.id === 'swimVO2' ? (
+                      <>
+                        <div className="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-2">
+                           <label className="text-sm font-black text-slate-800 uppercase tracking-wide">{item.label}</label>
+                           <span className="bg-cyan-500 text-slate-900 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-sm">
+                             Target Emas: {getTargetPlaceholder(item.id, identity.gender)} {item.unit}
+                           </span>
+                        </div>
+                        <div className="relative">
+                           <input type="number" step="0.1" value={tests[item.id]} onChange={e => setTests({...tests, [item.id]: e.target.value})} className={`${testInputClass} bg-white border-cyan-200 py-4 text-xl`} placeholder="Hasil Uji Ekstensif..." />
+                           <span className="absolute right-5 top-1/2 -translate-y-1/2 text-xs font-black text-cyan-600 uppercase tracking-widest">{item.unit}</span>
+                        </div>
+                      </>
+                   ) : (
+                      <>
+                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 ml-1">{item.label}</label>
+                        <div className="relative">
+                          <input type="number" step="0.01" value={tests[item.id]} onChange={e => setTests({...tests, [item.id]: e.target.value})} className={testInputClass} placeholder={getTargetPlaceholder(item.id, identity.gender)} />
+                          <span className="absolute right-5 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase tracking-widest">{item.unit}</span>
+                        </div>
+                      </>
+                   )}
                  </div>
                ))}
 
-               {/* FIX: Menghapus kelas export-transparent */}
-               <div className="sm:col-span-2 bg-gray-50 p-5 rounded-3xl border border-gray-100 mt-2">
-                 <div className="flex justify-between items-center mb-3">
-                   <label className="text-sm font-black text-gray-800 uppercase block">Beep Test (Bleep)</label>
-                   {calculatedVO2Max > 0 && (
-                     <span className="bg-yellow-400 text-black px-3 py-1.5 rounded-xl text-xs font-black shadow-sm animate-in fade-in slide-in-from-right-2 flex items-center gap-2">
-                       VO2Max: {calculatedVO2Max} <span className="text-[10px] opacity-70">ml/kg/min</span>
-                     </span>
-                   )}
-                 </div>
-                 <div className="grid grid-cols-2 gap-4">
-                   <div className="relative">
-                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400 uppercase">Level</span>
-                     <input type="number" min="1" value={tests.beepLevel} onChange={e => setTests({...tests, beepLevel: e.target.value})} className="w-full bg-white border border-gray-200 rounded-xl py-3 pl-16 pr-4 font-black text-gray-900 focus:outline-none focus:border-yellow-400 transition-all text-right" placeholder={isExporting ? "" : "0"} />
-                   </div>
-                   <div className="relative">
-                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400 uppercase">Balikan</span>
-                     <input type="number" min="1" value={tests.beepShuttle} onChange={e => setTests({...tests, beepShuttle: e.target.value})} className="w-full bg-white border border-gray-200 rounded-xl py-3 pl-20 pr-4 font-black text-gray-900 focus:outline-none focus:border-yellow-400 transition-all text-right" placeholder={isExporting ? "" : "0"} />
-                   </div>
-                 </div>
-                 <p className="text-[10px] font-bold text-gray-400 mt-3 text-center uppercase tracking-widest">
-                   <span className="text-yellow-600">Target Emas VO2Max: {identity.gender === 'Putra' ? '≥ 65.0' : '≥ 55.0'}</span> • Sistem mengkonversi otomatis
-                 </p>
-               </div>
-               
-               {/* FIX: Menghapus kelas export-transparent */}
-               <div className="sm:col-span-2 bg-gray-50 p-5 rounded-3xl border border-gray-100 mt-2">
-                 <label className="text-sm font-black text-gray-800 uppercase mb-3 block">3 Hop Jump Distance</label>
-                 <div className="grid grid-cols-2 gap-4">
-                   <div className="relative">
-                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400 uppercase">Kanan</span>
-                     <input type="number" step="0.1" value={tests.hopRight} onChange={e => setTests({...tests, hopRight: e.target.value})} className="w-full bg-white border border-gray-200 rounded-xl py-3 pl-16 pr-10 font-black text-gray-900 focus:outline-none focus:border-yellow-400 transition-all text-right placeholder:text-[11px] placeholder:font-bold placeholder:text-gray-400/80" placeholder={getTargetPlaceholder('hopRight', identity.gender)} />
-                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">m</span>
-                   </div>
-                   <div className="relative">
-                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400 uppercase">Kiri</span>
-                     <input type="number" step="0.1" value={tests.hopLeft} onChange={e => setTests({...tests, hopLeft: e.target.value})} className="w-full bg-white border border-gray-200 rounded-xl py-3 pl-16 pr-10 font-black text-gray-900 focus:outline-none focus:border-yellow-400 transition-all text-right placeholder:text-[11px] placeholder:font-bold placeholder:text-gray-400/80" placeholder={getTargetPlaceholder('hopLeft', identity.gender)} />
-                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">m</span>
-                   </div>
-                 </div>
-                 
-                 {lsiData.isDanger && (
-                   <div className="mt-4 bg-red-50 border border-red-200 text-red-800 rounded-2xl p-4 flex gap-3 animate-pulse shadow-sm">
-                     <div className="text-red-500 mt-0.5"><IconAlert /></div>
+               {/* PERINGATAN ASIMETRIS BAHU (SWIM STROKE) */}
+               {symmetryData.isDanger && (
+                   <div className="sm:col-span-2 mt-2 bg-rose-50 border border-rose-200 text-rose-800 rounded-2xl p-5 flex gap-4 animate-pulse shadow-sm">
+                     <div className="text-rose-500 mt-0.5"><IconAlert /></div>
                      <div>
-                       <h4 className="font-black text-sm uppercase tracking-wide">Peringatan Cedera!</h4>
-                       <p className="text-xs font-medium mt-1">Limb Symmetry Index (LSI) &lt; 85%. Jarak kaki <b>{lsiData.weakSide}</b> tertinggal. Risiko cedera tinggi.</p>
+                       <h4 className="font-black text-sm uppercase tracking-wide">Peringatan Asimetri Mobilitas Bahu</h4>
+                       <p className="text-xs font-medium mt-1 leading-relaxed">Perbedaan fleksibilitas Bahu Kanan dan Kiri melebihi 15% (Selisih: <b>{symmetryData.diff}%</b>). Kelenturan sisi <b>{symmetryData.weakSide}</b> tertinggal, berisiko menyebabkan <i>Stroke Imbalance</i> dan meningkatkan hambatan <i>drag efficiency</i> di dalam air.</p>
                      </div>
                    </div>
-                 )}
-               </div>
+               )}
             </div>
+            <p className="mt-8 p-4 bg-cyan-50 border border-cyan-100 rounded-2xl text-[10px] font-bold text-cyan-800 text-center uppercase tracking-widest leading-relaxed">
+              *Start Reaction Time dihitung menggunakan Inverse Scoring (Semakin kecil waktu = Semakin tinggi nilai).
+            </p>
           </div>
         </div>
 
-        {/* ================= KOLOM KANAN (Visualisasi & Keputusan) ================= */}
-        <div className="lg:col-span-5 flex flex-col gap-6">
+        {/* RIGHT COLUMN: ANALYTICS */}
+        <div className="lg:col-span-5 flex flex-col gap-8">
           
-          <div className={`rounded-[2rem] p-8 shadow-xl text-center relative overflow-hidden transition-colors duration-500 border ${averageScore > 80 ? 'bg-black text-white border-black' : averageScore < 60 && averageScore > 0 ? 'bg-red-600 text-white border-red-600' : 'bg-white border-gray-200'}`}>
-            <h3 className={`text-xs font-bold uppercase tracking-widest mb-2 ${averageScore > 80 || (averageScore < 60 && averageScore > 0) ? 'text-gray-300' : 'text-gray-500'}`}>Skor Rata-Rata Fisik</h3>
-            {/* FIX: Tampilkan strip (-) jika form blanko, jika tidak tampilkan skor */}
-            <div className="text-7xl font-black tracking-tighter mb-4">{isBlanko ? '-' : averageScore || 0}</div>
+          <div className={`rounded-[3rem] p-10 shadow-2xl text-center relative overflow-hidden transition-all duration-700 border-b-[12px] ${averageScore > 80 ? 'bg-slate-900 text-white border-cyan-500' : averageScore < 60 && averageScore > 0 ? 'bg-rose-700 text-white border-rose-900' : 'bg-white border-slate-200'}`}>
+            <h3 className={`text-[11px] font-black uppercase tracking-[0.3em] mb-3 ${averageScore > 80 || (averageScore < 60 && averageScore > 0) ? 'text-cyan-400/60' : 'text-slate-400'}`}>Aquatic Performance Score</h3>
+            <div className="text-[100px] font-black tracking-tighter mb-4 italic leading-none drop-shadow-lg">{isBlanko ? '-' : averageScore || 0}</div>
             
-            <div className="inline-flex items-center justify-center gap-2 px-6 py-2 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-sm font-black uppercase tracking-widest shadow-inner">
-               {averageScore > 80 ? ( <><span className="text-yellow-400"><IconMedal /></span> PROMOSI (LAYAK)</> ) : 
-                averageScore < 60 && averageScore > 0 ? 'EVALUASI / DEGRADASI' : 
-                averageScore > 0 ? 'MEMENUHI SYARAT MINIMAL' : 
-                isBlanko ? 'BLANKO TEMPLATE TES' : 'BELUM ADA DATA'}
+            <div className={`inline-flex items-center justify-center gap-3 px-8 py-3 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] shadow-inner border ${averageScore > 80 ? 'bg-cyan-900/50 text-cyan-400 border-cyan-500/30' : averageScore < 60 && averageScore > 0 ? 'bg-rose-900/50 text-rose-100 border-rose-500/30' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
+               {averageScore > 80 ? 'WORLD CLASS ELITE' : averageScore < 60 && averageScore > 0 ? 'NEEDS INTENSIVE DRILL' : averageScore > 0 ? 'QUALIFIED ATHLETE' : isBlanko ? 'BLANKO RECORDING' : 'WAITING FOR DATA'}
             </div>
           </div>
 
-          <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200 flex-1 flex flex-col">
-             <h3 className="text-sm font-black text-gray-800 uppercase tracking-widest text-center mb-6">Profil Performa Atlet</h3>
-             {/* FIX: Meneruskan variabel isBlanko ke dalam komponen RadarChart */}
-             <div className="flex-1 flex items-center justify-center min-h-[250px] bg-gray-50 rounded-3xl p-4 border border-gray-100">
-               <RadarChart data={Object.values(scores)} isBlanko={isBlanko} />
+          <div className="bg-white rounded-[3rem] p-8 shadow-sm border border-slate-200 flex-1 flex flex-col items-center">
+             <h3 className="text-xs font-black text-slate-800 uppercase tracking-[0.3em] text-center mb-8 italic">Hydrodynamic Radar Analysis</h3>
+             <div className="flex-1 w-full flex items-center justify-center min-h-[300px] bg-slate-50 rounded-[2.5rem] p-6 border border-slate-100">
+               <RadarChart data={Object.values(scores)} labels={activeLabels} isBlanko={isBlanko} />
              </div>
-             <p className="text-[10px] font-bold text-gray-400 text-center mt-4 uppercase tracking-widest">Garis Kuning = Standar Emas (100)</p>
+             <p className="text-[10px] font-black text-slate-400 text-center mt-6 uppercase tracking-[0.2em]">Cyan Polygon = Actual Capacity • Gray Line = Elite Standard</p>
           </div>
 
-          <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-200">
-            <h3 className="text-xs font-black text-gray-500 uppercase tracking-widest mb-4">Rincian Konversi Poin</h3>
-            <div className="space-y-2">
-              {[
-                { label: 'Sit & Reach', val: scores.sitReach },
-                { label: 'Push Up', val: scores.pushUp },
-                { label: 'Sit Up', val: scores.sitUp },
-                { label: 'Core Stabil', val: scores.core },
-                { label: 'Vert. Jump', val: scores.vJump },
-                { label: '3-Hop Right', val: scores.hopRight },
-                { label: '3-Hop Left', val: scores.hopLeft },
-                { label: 'Shuttle Run', val: scores.shuttle },
-                { label: 'Sprint 20m', val: scores.sprint },
-                { label: 'VO2Max', val: scores.beep }
-              ].map((item, idx) => (
-                <div key={idx} className="flex items-center p-2.5 rounded-xl hover:bg-gray-50 transition-colors">
-                  <span className="text-xs font-bold text-gray-600 uppercase whitespace-nowrap">{item.label}</span>
-                  {/* FIX: Membuat garis putus-putus membentang penuh (Leader Line) agar rapi */}
-                  {isBlanko ? (
-                    <div className="flex-1 ml-4 border-b-2 border-dashed border-gray-300 mt-1 h-1"></div>
-                  ) : (
-                    <div className="flex-1 flex justify-end items-center gap-3 ml-4">
-                      <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
-                        <div className={`h-full ${item.val >= 80 ? 'bg-green-500' : item.val >= 60 ? 'bg-yellow-400' : 'bg-red-500'}`} style={{ width: `${item.val}%` }}></div>
+          <div className="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-200 relative overflow-hidden">
+            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-600"></div>
+            <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-6">Point Distribution (0-100)</h3>
+            <div className="space-y-4">
+              {activeLabels.map((label, idx) => {
+                const val = Object.values(scores)[idx];
+                return (
+                  <div key={idx} className="flex items-center">
+                    <span className="text-[10px] font-black text-slate-700 uppercase w-28 tracking-tighter">{label}</span>
+                    {isBlanko ? (
+                      <div className="flex-1 border-b-2 border-dotted border-slate-200 mx-4"></div>
+                    ) : (
+                      <div className="flex-1 flex justify-end items-center gap-4 ml-2">
+                        <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                          <div className={`h-full transition-all duration-1000 ${val >= 80 ? 'bg-cyan-500' : val >= 60 ? 'bg-blue-400' : 'bg-rose-500'}`} style={{ width: `${val}%` }}></div>
+                        </div>
+                        <span className={`text-xs font-black w-8 text-right ${val >= 80 ? 'text-cyan-600' : 'text-slate-500'}`}>{val}</span>
                       </div>
-                      <span className="text-sm font-black w-8 text-right">{item.val}</span>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-8 pt-6 border-t border-slate-100 text-center">
+               <span className="text-[10px] font-black text-slate-300 tracking-[0.4em] uppercase">by fiqhipondaa9</span>
             </div>
           </div>
 
