@@ -103,8 +103,10 @@ const RadarChart = ({ data, labels, isBlanko }) => {
 export default function App() {
   const [identity, setIdentity] = useState({ name: '', origin: '', dob: '', gender: 'Putra' });
   const [anthro, setAnthro] = useState({ weight: '', height: '', armSpan: '', sitHeight: '' });
+  
+  // Menambahkan swimDistance untuk Auto-Calculator
   const [tests, setTests] = useState({
-    reaction: '', sitReach: '', shoulderL: '', shoulderR: '', pullUp: '', core: '', broadJump: '', swimVO2: ''
+    reaction: '', sitReach: '', shoulderL: '', shoulderR: '', pullUp: '', core: '', broadJump: '', swimDistance: ''
   });
   const [isExporting, setIsExporting] = useState(false);
 
@@ -168,6 +170,16 @@ export default function App() {
     return { diff: diff.toFixed(1), isDanger: diff > 15, weakSide: r < l ? 'Kanan' : 'Kiri' };
   }, [tests.shoulderR, tests.shoulderL]);
 
+  // --- MESIN PENGHITUNG VO2MAX RENANG (15 Menit) ---
+  const calculatedSwimVO2 = useMemo(() => {
+    const d = parseFloat(tests.swimDistance);
+    if (!d || d < 1) return '';
+    // Estimasi rasio: (Jarak / Waktu) dikonversi ke VO2Max
+    const speed = d / 15; // meter per menit
+    const vo2max = (speed * 0.45) + 15.0; // Konstanta adaptasi air
+    return parseFloat(vo2max.toFixed(2));
+  }, [tests.swimDistance]);
+
   const scores = useMemo(() => ({
     reaction: getScoreRenang('reaction', identity.gender, tests.reaction),
     sitReach: getScoreRenang('sitReach', identity.gender, tests.sitReach),
@@ -176,8 +188,8 @@ export default function App() {
     pullUp: getScoreRenang('pullUp', identity.gender, tests.pullUp),
     core: getScoreRenang('core', identity.gender, tests.core),
     broadJump: getScoreRenang('broadJump', identity.gender, tests.broadJump),
-    swimVO2: getScoreRenang('swimVO2', identity.gender, tests.swimVO2),
-  }), [tests, identity.gender]);
+    swimVO2: getScoreRenang('swimVO2', identity.gender, calculatedSwimVO2), // Menggunakan Auto-Calculator
+  }), [tests, identity.gender, calculatedSwimVO2]);
 
   const activeLabels = ['Start Rx', 'Flexibility', 'Shoulder (L)', 'Shoulder (R)', 'Pull Up', 'Core', 'Broad Jump', 'Swim VO2'];
   
@@ -340,33 +352,39 @@ export default function App() {
                  { id: 'pullUp', label: 'Pull Up (1 Menit)', unit: 'REPS' },
                  { id: 'core', label: 'Core Stability', unit: 'LEVEL' },
                  { id: 'broadJump', label: 'Standing Broad Jump', unit: 'METER' },
-                 { id: 'swimVO2', label: 'Aerobic Swim VO2 Max (15m)', unit: 'ML/KG/MIN' },
                ].map(item => (
-                 <div key={item.id} className={`${item.id === 'swimVO2' ? 'sm:col-span-2 bg-cyan-50/50 p-6 rounded-[2rem] border border-cyan-100 mt-2 shadow-inner' : 'flex flex-col'}`}>
-                   {item.id === 'swimVO2' ? (
-                      <>
-                        <div className="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-2">
-                           <label className="text-sm font-black text-slate-800 uppercase tracking-wide">{item.label}</label>
-                           <span className="bg-cyan-500 text-slate-900 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-sm">
-                             Target Emas: {getTargetPlaceholder(item.id, identity.gender)} {item.unit}
-                           </span>
-                        </div>
-                        <div className="relative">
-                           <input type="number" step="0.1" value={tests[item.id]} onChange={e => setTests({...tests, [item.id]: e.target.value})} className={`${testInputClass} bg-white border-cyan-200 py-4 text-xl`} placeholder="Hasil Uji Ekstensif..." />
-                           <span className="absolute right-5 top-1/2 -translate-y-1/2 text-xs font-black text-cyan-600 uppercase tracking-widest">{item.unit}</span>
-                        </div>
-                      </>
-                   ) : (
-                      <>
-                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 ml-1">{item.label}</label>
-                        <div className="relative">
-                          <input type="number" step="0.01" value={tests[item.id]} onChange={e => setTests({...tests, [item.id]: e.target.value})} className={testInputClass} placeholder={getTargetPlaceholder(item.id, identity.gender)} />
-                          <span className="absolute right-5 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase tracking-widest">{item.unit}</span>
-                        </div>
-                      </>
-                   )}
+                 <div key={item.id} className="flex flex-col">
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 ml-1">{item.label}</label>
+                    <div className="relative">
+                      <input type="number" step="0.01" value={tests[item.id]} onChange={e => setTests({...tests, [item.id]: e.target.value})} className={testInputClass} placeholder={getTargetPlaceholder(item.id, identity.gender)} />
+                      <span className="absolute right-5 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase tracking-widest">{item.unit}</span>
+                    </div>
                  </div>
                ))}
+
+               {/* BLOK KHUSUS 15 MINUTE SWIM TEST OTOMATIS */}
+               <div className="sm:col-span-2 bg-cyan-50/80 p-6 rounded-[2rem] border border-cyan-100 mt-2 shadow-inner">
+                 <div className="flex flex-col md:flex-row justify-between md:items-center mb-4 gap-3">
+                   <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
+                     Aerobic Swim Test (15 Menit)
+                   </label>
+                   <div className="flex flex-wrap items-center gap-2">
+                     {calculatedSwimVO2 !== '' && (
+                       <span className="bg-cyan-600 text-white px-3 py-1.5 rounded-xl text-xs font-black shadow-sm animate-in fade-in slide-in-from-right-2 flex items-center gap-2">
+                         VO2Max: {calculatedSwimVO2} <span className="text-[10px] opacity-70">ML/KG/MIN</span>
+                       </span>
+                     )}
+                     <span className="bg-slate-900 text-cyan-400 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm">
+                       Target Emas: {getTargetPlaceholder('swimVO2', identity.gender)}
+                     </span>
+                   </div>
+                 </div>
+                 <div className="relative">
+                   <span className="absolute left-5 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Jarak</span>
+                   <input type="number" step="1" value={tests.swimDistance} onChange={e => setTests({...tests, swimDistance: e.target.value})} className={`${testInputClass} pl-24 pr-16 bg-white`} placeholder="Masukkan jarak tempuh..." />
+                   <span className="absolute right-5 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase tracking-widest">METER</span>
+                 </div>
+               </div>
 
                {/* PERINGATAN ASIMETRIS BAHU (SWIM STROKE) */}
                {symmetryData.isDanger && (
@@ -380,7 +398,8 @@ export default function App() {
                )}
             </div>
             <p className="mt-8 p-4 bg-cyan-50 border border-cyan-100 rounded-2xl text-[10px] font-bold text-cyan-800 text-center uppercase tracking-widest leading-relaxed">
-              *Start Reaction Time dihitung menggunakan Inverse Scoring (Semakin kecil waktu = Semakin tinggi nilai).
+              *Start Reaction Time dihitung menggunakan Inverse Scoring (Semakin kecil waktu = Semakin tinggi nilai).<br/>
+              *VO2 Max Renang dikalkulasi secara empiris berdasarkan rasio Kecepatan (Meter per Menit).
             </p>
           </div>
         </div>
