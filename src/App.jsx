@@ -239,10 +239,10 @@ export default function App() {
         <div className="mx-auto relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div>
             <div className="inline-block bg-cyan-500 text-slate-900 font-black text-[10px] px-4 py-1.5 rounded-full uppercase tracking-[0.2em] mb-4 shadow-lg border border-cyan-400">
-              PERMENPORA 15 / 2024 • ELITE STANDARD
+              PERMENPORA 15 / 2024
             </div>
             <h1 className="text-4xl md:text-6xl font-black tracking-tighter leading-tight italic">
-              AQUATIC <span className="text-cyan-400">PERFORMANCE</span>
+              KALKULATOR FISIK <span className="text-cyan-400"> RENANG</span>
             </h1>
           </div>
           <div className="text-left md:text-right w-full md:w-auto">
@@ -258,7 +258,7 @@ export default function App() {
             )}
             <div className="mt-2">
                 <p className="font-black text-cyan-500/80 text-[11px] tracking-[0.3em] uppercase">
-                  System Developed <span className="text-white">by fiqhipondaa9</span>
+                  Platform Olahraga <span className="text-white">by fiqhipondaa9</span>
                 </p>
             </div>
           </div>
@@ -272,7 +272,7 @@ export default function App() {
           <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-200 relative overflow-hidden">
             <div className="flex items-center gap-4 mb-8 border-b border-slate-100 pb-5 relative z-10">
               <div className="bg-cyan-500 text-white p-3 rounded-2xl shadow-lg shadow-cyan-200"><IconUser /></div>
-              <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight italic">Biographical Profile</h2>
+              <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight italic">Identitas & Antropometri</h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 relative z-10">
@@ -340,7 +340,7 @@ export default function App() {
           <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-200">
             <div className="flex items-center gap-4 mb-8 border-b border-slate-100 pb-5">
               <div className="bg-cyan-100 text-cyan-600 p-3 rounded-2xl"><IconWaves /></div>
-              <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight italic">Aquatic Kinetics</h2>
+              <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight italic">Rekam Hasil Tes Fisik</h2>
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-6">
