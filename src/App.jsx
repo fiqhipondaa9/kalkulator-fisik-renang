@@ -340,7 +340,7 @@ export default function App() {
                  { id: 'pullUp', label: 'Pull Up (1 Menit)', unit: 'REPS' },
                  { id: 'core', label: 'Core Stability', unit: 'LEVEL' },
                  { id: 'broadJump', label: 'Standing Broad Jump', unit: 'METER' },
-                 { id: 'swimVO2', label: 'Aerobic Swim VO2 Max (15m)', unit: 'ML/KG' },
+                 { id: 'swimVO2', label: 'Aerobic Swim VO2 Max (15m)', unit: 'ML/KG/MIN' },
                ].map(item => (
                  <div key={item.id} className={`${item.id === 'swimVO2' ? 'sm:col-span-2 bg-cyan-50/50 p-6 rounded-[2rem] border border-cyan-100 mt-2 shadow-inner' : 'flex flex-col'}`}>
                    {item.id === 'swimVO2' ? (
