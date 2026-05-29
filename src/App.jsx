@@ -17,7 +17,7 @@ const getScoreRenang = (test, gender, value) => {
   if (value === '' || value === null || isNaN(value)) return 0;
   const v = parseFloat(value); const isM = gender === 'Putra';
   switch(test) {
-    case 'reaction': // Inverse Logic (Lower is Faster)
+    case 'reaction': 
       return isM ? (v <= 0.63 ? 100 : v <= 0.66 ? 80 : v <= 0.69 ? 70 : v <= 0.72 ? 60 : 40) 
                  : (v <= 0.67 ? 100 : v <= 0.70 ? 80 : v <= 0.74 ? 70 : v <= 0.77 ? 60 : 40);
     case 'sitReach': 
@@ -112,6 +112,10 @@ export default function App() {
   const [isExporting, setIsExporting] = useState(false);
   const [showCoffeeModal, setShowCoffeeModal] = useState(false);
 
+  // --- SOLUSI PERMANEN: DEKLARASI DI TARUH DI ATAS (Mencegah TDZ / Hoisting Error) ---
+  const inputClass = "w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:border-cyan-500 transition-all";
+  const testInputClass = "w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 font-black text-slate-900 focus:outline-none focus:border-cyan-500 transition-all pr-24 placeholder:text-[11px] placeholder:font-bold placeholder:text-slate-400/70 text-right";
+
   const age = useMemo(() => {
     if (!identity.dob) return '-';
     const birthDate = new Date(identity.dob);
@@ -122,13 +126,12 @@ export default function App() {
     return calculatedAge;
   }, [identity.dob]);
 
-  // --- TIMER AUTOMATION 33 MENIT ---
   useEffect(() => {
     const timer = setInterval(() => {
       if (!isExporting) {
         setShowCoffeeModal(true);
       }
-    }, 33 * 60 * 1000); // 33 Menit
+    }, 33 * 60 * 1000);
 
     return () => clearInterval(timer);
   }, [isExporting]);
@@ -307,7 +310,6 @@ export default function App() {
         </div>
       </header>
 
-      {/* MAIN CONTAINER */}
       <main className={`${isExporting ? 'w-[1200px]' : 'max-w-7xl w-full'} mx-auto mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8`}>
         
         {/* LEFT COLUMN: DATA INPUT */}
@@ -428,7 +430,6 @@ export default function App() {
                  </div>
                </div>
 
-               {/* PERINGATAN ASIMETRIS BAHU (SWIM STROKE) */}
                {symmetryData.isDanger && (
                    <div className="sm:col-span-2 mt-2 bg-rose-50 border border-rose-200 text-rose-800 rounded-2xl p-5 flex gap-4 animate-pulse shadow-sm">
                      <div className="text-rose-500 mt-0.5"><IconAlert /></div>
