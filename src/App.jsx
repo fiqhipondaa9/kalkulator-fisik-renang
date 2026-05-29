@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import * as htmlToImage from 'html-to-image';
+import qrisImage from './assets/shareqr.png';
 
 // --- KOMPONEN IKON SVG (Custom Aquatics) ---
 const IconUser = () => <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>;
@@ -8,6 +9,8 @@ const IconDownload = () => <svg className="w-5 h-5" viewBox="0 0 24 24" fill="no
 const IconReset = () => <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>;
 const IconWaves = () => <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>;
 const IconAlert = () => <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>;
+const IconCoffee = () => <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/></svg>;
+const IconX = () => <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>;
 
 // --- FUNGSI SCORING LOGIC RENANG ---
 const getScoreRenang = (test, gender, value) => {
@@ -21,8 +24,8 @@ const getScoreRenang = (test, gender, value) => {
       return isM ? (v >= 30.6 ? 100 : v >= 24.5 ? 80 : v >= 21.43 ? 70 : v >= 18.37 ? 60 : 40) 
                  : (v >= 32.1 ? 100 : v >= 25.7 ? 80 : v >= 22.48 ? 70 : v >= 19.27 ? 60 : 40);
     case 'shoulderL': 
-      return isM ? (v >= 9.0 ? 100 : v >= 7.2 ? 80 : v >= 6.3 ? 70 : v >= 5.4 ? 60 : 40) 
-                 : (v >= 12.0 ? 100 : v >= 9.6 ? 80 : v >= 8.4 ? 70 : v >= 7.2 ? 60 : 40);
+      return isM ? (v >= 12.0 ? 100 : v >= 9.6 ? 80 : v >= 8.4 ? 70 : v >= 7.2 ? 60 : 40) 
+                 : (v >= 14.0 ? 100 : v >= 11.2 ? 80 : v >= 9.8 ? 70 : v >= 8.4 ? 60 : 40);
     case 'shoulderR': 
       return isM ? (v >= 12.0 ? 100 : v >= 9.6 ? 80 : v >= 8.4 ? 70 : v >= 7.2 ? 60 : 40) 
                  : (v >= 14.0 ? 100 : v >= 11.2 ? 80 : v >= 9.8 ? 70 : v >= 8.4 ? 60 : 40);
@@ -47,7 +50,7 @@ const getTargetPlaceholder = (test, gender) => {
   switch(test) {
     case 'reaction': return isM ? '≤ 0.63' : '≤ 0.67';
     case 'sitReach': return isM ? '≥ 30.6' : '≥ 32.1';
-    case 'shoulderL': return isM ? '≥ 9.0' : '≥ 12.0';
+    case 'shoulderL': return isM ? '≥ 12.0' : '≥ 14.0';
     case 'shoulderR': return isM ? '≥ 12.0' : '≥ 14.0';
     case 'pullUp': return isM ? '≥ 33' : '≥ 21';
     case 'core': return '≥ 12';
@@ -103,12 +106,11 @@ const RadarChart = ({ data, labels, isBlanko }) => {
 export default function App() {
   const [identity, setIdentity] = useState({ name: '', origin: '', dob: '', gender: 'Putra' });
   const [anthro, setAnthro] = useState({ weight: '', height: '', armSpan: '', sitHeight: '' });
-  
-  // Menambahkan swimDistance untuk Auto-Calculator
   const [tests, setTests] = useState({
     reaction: '', sitReach: '', shoulderL: '', shoulderR: '', pullUp: '', core: '', broadJump: '', swimDistance: ''
   });
   const [isExporting, setIsExporting] = useState(false);
+  const [showCoffeeModal, setShowCoffeeModal] = useState(false);
 
   const age = useMemo(() => {
     if (!identity.dob) return '-';
@@ -119,6 +121,17 @@ export default function App() {
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) calculatedAge--;
     return calculatedAge;
   }, [identity.dob]);
+
+  // --- TIMER AUTOMATION 33 MENIT ---
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (!isExporting) {
+        setShowCoffeeModal(true);
+      }
+    }, 33 * 60 * 1000); // 33 Menit
+
+    return () => clearInterval(timer);
+  }, [isExporting]);
 
   const bmiData = useMemo(() => {
     if (!anthro.weight || !anthro.height || anthro.height <= 0) return { bmi: '-', status: '-', color: 'text-slate-400' };
@@ -132,7 +145,6 @@ export default function App() {
     return { bmi, status, color };
   }, [anthro.weight, anthro.height]);
 
-  // --- MESIN PENGHITUNG APE INDEX & RASIO TUNGKAI ---
   const proportionData = useMemo(() => {
     const h = parseFloat(anthro.height);
     const arm = parseFloat(anthro.armSpan);
@@ -159,7 +171,6 @@ export default function App() {
     return { apeIndex, legRatio };
   }, [anthro.height, anthro.armSpan, anthro.sitHeight]);
 
-  // Deteksi Simetri Khusus Renang (Shoulder Mobility)
   const symmetryData = useMemo(() => {
     const r = parseFloat(tests.shoulderR);
     const l = parseFloat(tests.shoulderL);
@@ -170,13 +181,11 @@ export default function App() {
     return { diff: diff.toFixed(1), isDanger: diff > 15, weakSide: r < l ? 'Kanan' : 'Kiri' };
   }, [tests.shoulderR, tests.shoulderL]);
 
-  // --- MESIN PENGHITUNG VO2MAX RENANG (15 Menit) ---
   const calculatedSwimVO2 = useMemo(() => {
     const d = parseFloat(tests.swimDistance);
     if (!d || d < 1) return '';
-    // Estimasi rasio: (Jarak / Waktu) dikonversi ke VO2Max
-    const speed = d / 15; // meter per menit
-    const vo2max = (speed * 0.45) + 15.0; // Konstanta adaptasi air
+    const speed = d / 15; 
+    const vo2max = (speed * 0.45) + 15.0; 
     return parseFloat(vo2max.toFixed(2));
   }, [tests.swimDistance]);
 
@@ -188,7 +197,7 @@ export default function App() {
     pullUp: getScoreRenang('pullUp', identity.gender, tests.pullUp),
     core: getScoreRenang('core', identity.gender, tests.core),
     broadJump: getScoreRenang('broadJump', identity.gender, tests.broadJump),
-    swimVO2: getScoreRenang('swimVO2', identity.gender, calculatedSwimVO2), // Menggunakan Auto-Calculator
+    swimVO2: getScoreRenang('swimVO2', identity.gender, calculatedSwimVO2),
   }), [tests, identity.gender, calculatedSwimVO2]);
 
   const activeLabels = ['Start Rx', 'Flexibility', 'Shoulder (L)', 'Shoulder (R)', 'Pull Up', 'Core', 'Broad Jump', 'Swim VO2'];
@@ -204,7 +213,7 @@ export default function App() {
 
   const handleDownloadImage = async () => {
     setIsExporting(true);
-    await new Promise((resolve) => setTimeout(resolve, 400));
+    await new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 400)));
     try {
       const element = document.getElementById('report-container');
       const dataUrl = await htmlToImage.toPng(element, { quality: 1.0, backgroundColor: "#f8fafc", pixelRatio: 2 });
@@ -215,11 +224,8 @@ export default function App() {
     } catch (error) { console.error(error); alert("Gagal membuat gambar."); } finally { setIsExporting(false); }
   };
 
-  const inputClass = "w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:border-cyan-500 transition-all";
-  const testInputClass = "w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 font-black text-slate-900 focus:outline-none focus:border-cyan-500 transition-all pr-24 placeholder:text-[11px] placeholder:font-bold placeholder:text-slate-400/70 text-right";
-
   return (
-    <div id="report-container" className="min-h-screen bg-slate-50 flex flex-col items-center py-10 px-4 font-sans print:bg-white print:py-0 print:px-0">
+    <div id="report-container" className="min-h-screen bg-slate-50 flex flex-col items-center py-10 px-4 font-sans print:bg-white print:py-0 print:px-0 relative">
       
       {isExporting && (
         <style dangerouslySetInnerHTML={{__html: `
@@ -229,8 +235,44 @@ export default function App() {
         `}} />
       )}
 
+      {/* --- FAB KONSULTASI & APRESIASI --- */}
+      {!isExporting && (
+        <button 
+          onClick={() => setShowCoffeeModal(true)} 
+          className="no-print fixed bottom-8 right-8 bg-cyan-500 hover:bg-cyan-600 text-slate-900 h-14 rounded-full shadow-2xl z-50 flex items-center justify-center px-4 gap-0 hover:gap-3 transition-all duration-300 border-4 border-cyan-100 group overflow-hidden"
+          title="Konsultasi & Apresiasi"
+        >
+          <div className="relative flex items-center justify-center">
+            <IconCoffee />
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-ping"></span>
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border border-white"></span>
+          </div>
+          <span className="max-w-0 opacity-0 group-hover:max-w-xs group-hover:opacity-100 transition-all duration-500 ease-in-out whitespace-nowrap font-black text-xs uppercase tracking-widest text-slate-900 ml-0 group-hover:ml-2">
+            Konsultasi WA
+          </span>
+        </button>
+      )}
+
+      {/* UNIFIED COFFEE MODAL */}
+      {showCoffeeModal && (
+        <div className="fixed inset-0 z-[200] bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-300 no-print">
+          <div className="bg-white w-full max-w-sm rounded-3xl shadow-2xl flex flex-col overflow-hidden text-center relative p-8">
+            <button onClick={() => setShowCoffeeModal(false)} className="absolute top-4 right-4 bg-slate-100 text-slate-400 hover:bg-slate-200 hover:text-slate-600 p-2 rounded-xl transition-colors"><IconX className="w-4 h-4" /></button>
+            <div className="bg-amber-100 text-amber-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"><IconCoffee /></div>
+            <h3 className="text-xl font-black text-slate-800 mb-2">Traktir Kopi Developer</h3>
+            <p className="text-xs font-bold text-slate-500 mb-6 leading-relaxed normal-case">Terima kasih telah menggunakan aplikasi ini! Dukungan Anda sangat berarti bagi pengembangan fitur selanjutnya.</p>
+            <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100 mb-6 flex justify-center">
+                <img src={qrisImage} alt="QRIS DANA" className="max-w-[200px] h-auto rounded-xl shadow-sm border border-slate-200" />
+            </div>
+            <a href="https://wa.me/6285340804702?text=Halo%20Developer,%20saya%20ingin%20konsultasi%20mengenai%20Aplikasi%20Kalkulator%20Fisik%20Renang..." target="_blank" rel="noopener noreferrer" className="bg-cyan-500 hover:bg-cyan-600 text-slate-900 font-black py-4 rounded-xl shadow-md transition-colors w-full flex items-center justify-center gap-2 text-sm uppercase tracking-widest">
+                Konsultasi WhatsApp
+            </a>
+          </div>
+        </div>
+      )}
+
       {/* HEADER: AQUATIC DYNAMICS THEME */}
-      <header className="bg-slate-900 text-white p-8 shadow-2xl relative overflow-hidden w-full max-w-7xl rounded-[2.5rem] border-b-8 border-cyan-500">
+      <header className="bg-slate-900 text-white p-8 shadow-2xl relative overflow-hidden w-full max-w-7xl rounded-t-[2.5rem] border-b-8 border-cyan-500">
         <div className="absolute top-0 left-0 w-full h-full opacity-20">
            <div className="absolute top-[-50%] right-[-10%] w-[60%] h-[150%] bg-cyan-400/30 blur-[100px] rounded-full"></div>
            <div className="absolute bottom-[-50%] left-[-10%] w-[60%] h-[150%] bg-blue-600/30 blur-[100px] rounded-full"></div>
@@ -265,6 +307,7 @@ export default function App() {
         </div>
       </header>
 
+      {/* MAIN CONTAINER */}
       <main className={`${isExporting ? 'w-[1200px]' : 'max-w-7xl w-full'} mx-auto mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8`}>
         
         {/* LEFT COLUMN: DATA INPUT */}
@@ -303,11 +346,10 @@ export default function App() {
                <div className="flex items-center gap-4"><IconScale /> <span className="font-black text-xs tracking-[0.2em] uppercase text-slate-400">Body Mass Index</span></div>
                <div className="flex items-center gap-5">
                  <span className="text-4xl font-black italic">{bmiData.bmi}</span>
-                 {bmiData.status !== '-' && <span className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-slate-800 shadow-inner ${bmiData.color}`}>{bmiData.status}</span>}
+                 {bmiData.status !== '-' && <span className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-white shadow-inner ${bmiData.color}`}>{bmiData.status}</span>}
                </div>
             </div>
 
-            {/* KOTAK RASIO TUNGKAI & LENGAN (AQUATICS) */}
             {(anthro.height > 0 && (anthro.armSpan > 0 || anthro.sitHeight > 0)) && (
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10 animate-in fade-in">
                 <div className="bg-white border border-slate-200 rounded-[2rem] p-5 shadow-sm flex flex-col justify-center relative overflow-hidden">
